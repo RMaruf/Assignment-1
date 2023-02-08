@@ -1,0 +1,113 @@
+# Name:                       Calculating the cost of Amazing Eats
+# Author:                     Maruf Rasool
+# Date:                       February 1th, 2023
+# Date of last Modified:      February 7th, 2023
+
+# Purpose: 
+# This program will store all the information of the customer
+# It will then display the confirmaiton of customer information
+# And then it will ask the user to choose the food from the menu
+# After user choose the food it will ask the quantity of food
+# And then it will ask the user if is a student or not to apply student
+# discount and then it will calculate if the subtotal is less than $100 
+# or more than $100 and less than $500 or more than $500 to apply the discount
+# Finall it will print final amount of order with discount and HST
+
+
+# Function to calculate the sum of items based on price and quantity
+def calculate_sum(items, price, quantity):
+    # Initialize the total variable assign to zero
+    total = 0
+    for item, cost, qty in zip(items, price, quantity):
+        # Multiply each item's cost with its quantity and add it to the total
+        total += cost * qty
+    return total
+
+# Function to calculate discount based on total purchase amount
+def calculate_discount(total):
+    # Checking if total is less than 100
+    if total < 100:
+        # Apply 15% discount
+        discount = total * 0.15
+    # Check if total is between 100 and 500
+    elif total < 500:
+        # Apply 20%
+        discount = total * 0.20
+    # If it's over 500
+    else:
+        # Apply 25%
+        discount = total * 0.25
+    return discount
+
+# This function prints a receipt for the given information
+def print_receipt(first_name, last_name, address, items, price, quantity, is_student=False):
+    # Calculate total price for all items
+    total = calculate_sum(items, price, quantity)
+    # Calculate the discount
+    discount = calculate_discount(total)
+    if is_student:
+        discount += total * 0.10
+    # Calculate HST
+    hst = total * 0.13
+    final_price = total - discount + hst
+
+    # Print the customer information with total amount
+    print("=" * 20)
+    print("Customer Name: ", first_name, last_name)
+    print("Address: ", address)
+    print("=" * 20)
+    print("Item\t\tPrice\t\tQuantity\t\tCost")
+    for item, cost, qty in zip(items, price, quantity):
+        print(f"{item}\t\t${cost}\t\t{qty}\t\t\t${cost * qty}")
+    print("=" * 20)
+    print(f"Subtotal: \t\t\t\t${total}")
+    print(f"Discount: \t\t\t\t${discount}")
+    print(f"HST (13%): \t\t\t\t${hst}")
+    print("=" * 20)
+    print(f"Final Price: \t\t\t\t${final_price}")
+    print("=" * 20)
+
+# Print the information for the customer 
+print("\nWelcome to Arnold's Amazing Eats our restuarant we have two item for today's menu please choose from the menu: \n")
+# Ask for input from the user
+first_name = input("Enter customer first name: ")
+last_name = input("Enter customer last name: ")
+address = input("Enter customer address and unit number if applicable: ")
+special_instructions = input("Enter any special instructions for deliveries: ")
+phone_number = input("Enter customer phone number: ")
+
+
+menu = input("\nPlease order your food from below two items\n 1. Burger\n 2. Shawarma \n ==>")
+
+# Ask from the user for the quantity of the food
+quantity = int(input("How many would you like?\n "))
+
+#print("You have selected to purchase {} {}s.".format(quantity))
+
+#order_confirmation = f"\nOrder Confirmation:\n" \
+#                     f"Name: {first_name} {last_name}\n" \
+#                     f"Address: {address}\n" \
+#                     f"Phone: {phone_number}\n" \
+#                     f"Special Instructions: {special_instructions}\n" \
+#                     f"Item: {menu}\n" \
+#                     f"Quantity: {quantity}\n"
+#
+#print(order_confirmation)
+
+if menu.lower() == "1":
+    items = ["Burger"] * quantity
+    price = [10] * quantity
+elif menu.lower() == "2":
+    items = ["Shawarma"] * quantity
+    price = [15] * quantity
+else:
+    # If the user did not entered 1 or 2 it will print this error message
+    print("Invalid menu item please try again from the menu")
+
+# Checking if the customer is student
+student = input("Are you a student (yes/no)? ")
+# If the customer is student apply discount 10%
+is_student = True if student.lower() == "y" else False
+
+# Print the result with customer information
+print_receipt(first_name, last_name, address, items, price, [quantity], is_student)
